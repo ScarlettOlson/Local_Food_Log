@@ -37,5 +37,15 @@ extra_nutri_info *copy_extra_nutri_info(extra_nutri_info *info) {
     return new_info;
 }
 
+int update_extra_nutri_info(extra_nutri_info *dst, extra_nutri_info *src) {
+    if(!dst || !src) return 0;
 
+    dst->sat_fat = src->sat_fat;
+    dst->trans_fat = src->trans_fat;
+    dst->cholesterol = src->cholesterol;
+    dst->sodium = src->sodium;
+    dst->fiber = src->fiber;
+    dst->sugar = src->sugar;
+    return
+}
 

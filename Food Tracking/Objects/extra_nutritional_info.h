@@ -11,8 +11,9 @@ typedef struct {
 } extra_nutri_info;
 
 extra_nutri_info *create_extra_nutri_info(int sat_fat, int trans_fat, int cholesterol, int sodium, int fiber, int sugar);
-
 extra_nutri_info *copy_extra_nutri_info(extra_nutri_info *info);
+
+int update_extra_nutri_info(extra_nutri_info *dst, extra_nutri_info *src);
 
 #endif
 

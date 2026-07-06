@@ -21,9 +21,9 @@ typedef struct {
     ingredient  **ingred_list;
     
     int set_nutrion_manually;
-    nutri_info nutrition;
-    extra_nutri_info extra_nutrition;
-    vitamin_info viatmins;
+    nutri_info *nutrition;
+    extra_nutri_info *extra_nutrition;
+    vitamin_info *viatmins;
 } meal;
 
 meal *create_meal(char *name, char *description, int portions, int set_nutrion_manually);

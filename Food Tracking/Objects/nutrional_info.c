@@ -23,3 +23,14 @@ nutri_info *copy_nutri_info(nutri_info *info) {
     new_info->fat = info->fat;
     return new_info;
 }
+
+int update_nutri_info(nutri_info *dst, nutri_info *src) {
+    if(!dst || !src) return 0;
+
+    dst->calories = src->calories;
+    dst->protein = src->protein;
+    dst->carbs = src->carbs;
+    dst->fat = src->fat;
+    return 1;
+}
+

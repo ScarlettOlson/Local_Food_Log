@@ -22,3 +22,13 @@ vitamin_info *copy_vitamin_info(vitamin_info *info){
     new_info->potassium = info->potassium;
     return new_info;
 }
+
+int update_vitamin_info(vitamin_info *src, vitamin_info *dst) {
+    if(!src | !dst) return 0;
+
+    src->vitamin_d = dst->vitamin_d;
+    src->calcium = dst->calcium;
+    src->iron = dst->iron;
+    src->potassium = dst->potassium;
+    return 1;
+}

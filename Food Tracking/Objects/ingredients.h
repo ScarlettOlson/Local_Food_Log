@@ -28,7 +28,7 @@ int fill_ingredient(ingredient *ingred, nutri_info *info, extra_nutri_info *extr
 
 int set_ingred_nutri_info(ingredient *ingred, nutri_info *info);
 int set_ingred_extra_nutri_info(ingredient *ingred, extra_nutri_info *info);
-int set_ingred_vitamins(ingredient *ingred, vitamin_info info);
+int set_ingred_vitamins(ingredient *ingred, vitamin_info *info);
 
 
 void destroy_ingredient(ingredient *ingred);
