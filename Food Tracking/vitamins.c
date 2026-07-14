@@ -17,7 +17,7 @@ vitamin_info *create_vitamin_info(int vitamin_d, int calcium, int iron, int pota
 /**
  * Crates a copy of the vitamin object
  */
-vitamin_info *copy_vitamin_info(vitamin_info *info){
+vitamin_info *duplicate_vitamin_info(vitamin_info *info){
     vitamin_info *new_info = malloc(sizeof(vitamin_info));
     new_info->vitamin_d = info->vitamin_d;
     new_info->calcium = info->calcium;

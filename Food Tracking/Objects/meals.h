@@ -13,11 +13,13 @@
  * All values are in grams unless otherwise noted
  */
 typedef struct {
-    char    *name;
-    char    *description;
-    int     portions;
+    char *name;
+    char *description;
+    int  portions;
 
-    int     *ingred_portions;
+    int num_ingredients;
+    int max_ingredients;
+    int *ingred_portions;
     ingredient  **ingred_list;
     
     int set_nutrion_manually;
@@ -32,9 +34,9 @@ int set_meal_nutri_info(meal *meal_ptr, nutri_info *info);
 int set_meal_extra_nutri_info(meal *meal_ptr, extra_nutri_info *info);
 int set_meal_vitamin_info(meal *meal_ptr, vitamin_info *info);
 
-int add_meal_ingredient(ingredient ingred, int portion);
-int remove_meal_ingreient(ingredient ingred);
-int set_portion_meal_ingredient(char *name, int portion);
+int add_meal_ingredient(meal *meal_ptr, ingredient *ingred, int portion);
+int remove_meal_ingreient(meal *meal_ptr, ingredient *ingred);
+int set_portion_meal_ingredient(meal *meal_ptr, char *name, int portion);
 
 nutri_info get_meal_portion_nutri_info(meal *meal_ptr);
 extra_nutri_info get_meal_portion_extra_nutri_info(meal *meal_ptr);
