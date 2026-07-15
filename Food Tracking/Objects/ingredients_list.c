@@ -140,6 +140,11 @@ ingredient *replace_ingred_list(ingred_list *list, ingredient *ingred, float por
     
     return NULL;
 }
+/**
+ * Creates an exact copy of the given ingredient list without modifying the original
+ * 
+ * Returns the copy of the ingredient list or NULL if the operation failed
+ */
 ingred_list *duplicate_ingred_list(ingred_list *list) {
     if(!list) return NULL;
 
