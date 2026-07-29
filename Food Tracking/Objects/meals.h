@@ -19,9 +19,9 @@ int set_meal_nutri_info(meal *meal_ptr, nutri_info *info);
 int set_meal_extra_nutri_info(meal *meal_ptr, extra_nutri_info *info);
 int set_meal_vitamin_info(meal *meal_ptr, vitamin_info *info);
 
-int add_meal_ingredient(meal *meal_ptr, ingredient *ingred, int portion);
-int remove_meal_ingreient(meal *meal_ptr, ingredient *ingred);
-int set_portion_meal_ingredient(meal *meal_ptr, char *name, int portion);
+int add_meal_ingredient(meal *meal_ptr, ingredient *ingred, float portion);
+ingredient *remove_meal_ingreient(meal *meal_ptr, char *name);
+ingredient *set_portion_meal_ingredient(meal *meal_ptr, char *name, int portion);
 
 
 nutri_info get_meal_nutri_info(meal *meal_ptr);

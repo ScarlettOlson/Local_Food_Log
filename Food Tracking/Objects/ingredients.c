@@ -124,6 +124,64 @@ int set_ingred_vitamins(ingredient *ingred, vitamin_info *info) {
     return ingred->vitamin != NULL;
 }
 
+// Getters and Setters
+float get_ingred_calories(ingredient *ingred) {
+    return (ingred) ? get_calories(ingred->nutrition) : -1.0;
+}
+float get_ingred_protein(ingredient *ingred) {
+    return (ingred) ? get_protein(ingred->nutrition) : -1.0;
+}
+float get_ingred_carbs(ingredient *ingred) {
+    return (ingred) ? get_carbs(ingred->nutrition) : -1.0;
+}
+float get_ingred_fat(ingredient *ingred) {
+    return (ingred) ? get_fat(ingred->nutrition) : -1.0;
+}
+float get_ingred_sat_fat(ingredient *ingred) {
+    return (ingred) ? get_sat_fat(ingred->extra_nutrition) : -1.0;
+}
+float get_ingred_trans_fat(ingredient *ingred) {
+    return (ingred) ? get_trans_fat(ingred->extra_nutrition) : -1.0;
+}
+float get_ingred_cholesterol(ingredient *ingred) {
+    return (ingred) ? get_cholesterol(ingred->extra_nutrition) : -1.0;
+}
+float get_ingred_sodium(ingredient *ingred) {
+    return (ingred) ? get_sodium(ingred->extra_nutrition) : -1.0;
+}
+float get_ingred_fiber(ingredient *ingred) {
+    return (ingred) ? get_fiber(ingred->extra_nutrition) : -1.0;
+}
+float get_ingred_sugar(ingredient *ingred) {
+    return (ingred) ? get_sugar(ingred->extra_nutrition) : -1.0;
+}
+float get_ingred_vitamin_d(ingredient *ingred) {
+    return (ingred) ? get_vitamin_d(ingred->vitamin) : -1.0;
+}
+float get_ingred_calcium(ingredient *ingred) {
+    return (ingred) ? get_calcium(ingred->vitamin) : -1.0;
+}
+float get_ingred_iron(ingredient *ingred) {
+    return (ingred) ? get_iron(ingred->vitamin) : -1.0;
+}
+float get_ingred_potassium(ingredient *ingred) {
+    return (ingred) ? get_potassium(ingred->vitamin) : -1.0;
+}
+
+void set_ingred_calories(ingredient *ingred, float val) { if(ingred) set_calories(ingred->nutrition, val); }
+void set_ingred_protein(ingredient *ingred, float val) { if(ingred) set_protein(ingred->nutrition, val); }
+void set_ingred_carbs(ingredient *ingred, float val) { if(ingred) set_carbs(ingred->nutrition, val); }
+void set_ingred_fat(ingredient *ingred, float val) { if(ingred) set_fat(ingred->nutrition, val); }
+void set_ingred_sat_fat(ingredient *ingred, float val) { if(ingred) set_sat_fat(ingred->extra_nutrition, val); }
+void set_ingred_trans_fat(ingredient *ingred, float val) { if(ingred) set_trans_fat(ingred->extra_nutrition, val); }
+void set_ingred_cholesterol(ingredient *ingred, float val) { if(ingred) set_cholesterol(ingred->extra_nutrition, val); }
+void set_ingred_sodium(ingredient *ingred, float val) { if(ingred) set_sodium(ingred->extra_nutrition, val); }
+void set_ingred_fiber(ingredient *ingred, float val) { if(ingred) set_fiber(ingred->extra_nutrition, val); }
+void set_ingred_sugar(ingredient *ingred, float val) { if(ingred) set_sugar(ingred->extra_nutrition, val); }
+void set_ingred_vitamin_d(ingredient *ingred, float val) { if(ingred) set_vitamin_d(ingred->vitamin, val); }
+void set_ingred_calcium(ingredient *ingred, float val) { if(ingred) set_calcium(ingred->vitamin, val); }
+void set_ingred_iron(ingredient *ingred, float val) { if(ingred) set_iron(ingred->vitamin, val); }
+void set_ingred_potassium(ingredient *ingred, float val) { if(ingred) set_potassium(ingred->vitamin, val); }
 
 /**
  * Creates a copy of the given ingredient, including making copies of all of the data

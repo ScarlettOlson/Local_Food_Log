@@ -61,18 +61,10 @@ float get_protein(nutri_info *info) { return info ? info->protein : -1.0; }
 float get_carbs(nutri_info *info) { return info ? info->carbs : -1.0; }
 float get_fat(nutri_info *info) { return info ? info->fat : -1.0; }
 
-void set_cal(nutri_info *info, float cal) {
-    if(info) info->calories = (cal < 0) ? -1 : cal;
-}
-void set_protein(nutri_info *info, float protein) {
-    if(info) info->protein = (protein < 0) ? -1 : protein;
-}
-void set_carbs(nutri_info *info, float carbs) {
-    if(info) info->carbs = (carbs < 0) ? -1 : carbs;
-}
-void set_fat(nutri_info *info, float fat) {
-    if(info) info->fat = (fat < 0) ? -1 : fat;
-}
+void set_calories(nutri_info *info, float val) { if(info) info->calories = (val < 0) ? -1 : val; }
+void set_protein(nutri_info *info, float val) { if(info) info->protein = (val < 0) ? -1 : val; }
+void set_carbs(nutri_info *info, float val) { if(info) info->carbs = (val < 0) ? -1 : val; }
+void set_fat(nutri_info *info, float val) { if(info) info->fat = (val < 0) ? -1 : val; }
 
 
 

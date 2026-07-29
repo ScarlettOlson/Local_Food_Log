@@ -33,14 +33,14 @@ ingred_list *create_ingred_list() {
  * Returns non-zero if the operation completed successfuly, otherwise returns 0
  */
 int add_ingred_list_item(ingred_list *list, ingredient *ingred, float portion) {
-    if(!list || !ingred) return 0;
+    if(!list || !ingred || (portion <= 0)) return 0;
 
     // Allocate more memory
     if(list->num == list->max) {
         int tmp_max = 2 * list->max;
         int tmp_portions = malloc(tmp_max * sizeof(float));
         if(!tmp_portions) return 0;
-        ingredient **tmp_ingreds = malloc(tmp_max * sizeof(*ingred_list));
+        ingredient **tmp_ingreds = malloc(tmp_max * sizeof(ingred_list*));
         if(!tmp_ingreds) return 0;
 
         for(int i=0; i<list->max; i++) {
@@ -65,18 +65,28 @@ int add_ingred_list_item(ingred_list *list, ingredient *ingred, float portion) {
  * 
  * Returns 0 if the ingredient does not exist or the operation failed, otherwise returns 1
  */
-int remove_ingred_list_item(ingred_list *list, char *name) {
-    if(!list | !name) return 0;
+ingred_return *remove_ingred_list_item(ingred_list *list, char *name) {
+    if(!list | !name) return NULL;
 
     // Find ingredient in list
     int pos = -1;
+    ingredient *ingred = NULL;
+    float portion = 0;
     for(int i=0; i<list->num; i++) {
         if(strcmp(list->ingreds[i]->name, name)) {
             pos = i;
+            ingred = list->ingreds[i];
+            portion = list->portions[i];
             break;
         }
     }
-    if(pos = -1) return 0;
+    if(!ingred) return NULL;
+    
+    // Create Returnable Object
+    ingred_return *return_val = malloc(sizeof(ingred_return));
+    if(!return_val) return NULL;
+    return_val->ingred = ingred;
+    return_val->portion = portion;
 
     // Remove ingredient and shift list left
     list->num--;
@@ -84,7 +94,7 @@ int remove_ingred_list_item(ingred_list *list, char *name) {
         list->ingreds[i] = list->ingreds[i+1];
         list->portions[i] = list->portions[i+1];
     }
-    return 1;
+    return return_val;
 }
 
 /**
@@ -92,11 +102,21 @@ int remove_ingred_list_item(ingred_list *list, char *name) {
  * 
  * Returns a pointer to the ingredient if it exists, Otherwise returns a NULL pointer
  */
-ingredient *search_ingred_list(ingred_list *list, char *name) {
+ingred_return *search_ingred_list_item(ingred_list *list, char *name) {
     if(!list || !name) return NULL;
 
     for(int i=0; i<list->num; i++) {
-        if(strcmp(list->ingreds[i]->name, name)) return list->ingreds[i];
+        if(strcmp(list->ingreds[i]->name, name)) {
+            ingredient *ingred = list->ingreds[i];
+            float portion = list->portions[i];
+            ingred_return *return_val = malloc(sizeof(ingred_return));
+            if(!return_val) return NULL;
+            else {
+                return_val->ingred = ingred;
+                return_val->portion = portion;
+                return return_val;
+            }
+        }
     }
 
     return NULL;
@@ -122,19 +142,29 @@ float search_ingred_list_portion(ingred_list *list, char *name) {
  * 
  * Returns the old ingredient if it exists, Otherwise returns a NULL pointer
  */
-ingredient *replace_ingred_list(ingred_list *list, ingredient *ingred, float portion) {
+ingred_return *replace_ingred_list_item(ingred_list *list, ingredient *ingred, float portion) {
     if(!list || !ingred) return NULL;
 
     char *name = ingred->name;
     for(int i=0; i<list->num; i++) {
         if(strcmp(name, list->ingreds[i]->name)) {
+            // Allocate new memory
             ingredient *new_ingred = duplicate_ingredient(ingred);
+            ingred_return *return_val = malloc(sizeof(ingred_return));
+            if(!return_val) destroy_ingred(new_ingred);
             if(!new_ingred) return NULL;
-            else {
-                ingredient *old_ingred = list->ingreds[i];
-                list->ingreds[i] = new_ingred;
-                return old_ingred;
-            }
+
+            // Save old ingredient info
+            ingredient *old_ingred = list->ingreds[i];
+            float old_portion = list->portions[i];
+            return_val->ingred = old_ingred;
+            return_val->portion = old_portion;
+
+            // Set new ingredient information
+            list->ingreds[i] = new_ingred;
+            list->portions[i] = portion;
+
+            return return_val;
         }
     }
     
@@ -164,7 +194,7 @@ ingred_list *duplicate_ingred_list(ingred_list *list) {
     return new_list;
 }
 
-int destory_ingred_list(ingred_list *list) {
+int destroy_ingred_list(ingred_list *list) {
 
 }
 

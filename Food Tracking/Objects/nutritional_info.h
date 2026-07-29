@@ -12,10 +12,10 @@ float get_protein(nutri_info *info);
 float get_carbs(nutri_info *info);
 float get_fat(nutri_info *info);
 
-void set_cal(nutri_info *info, float cal);
-void set_protein(nutri_info *info, float protein);
-void set_carbs(nutri_info *info, float carbs);
-void set_fat(nutri_info *info, float fat);
+void set_calories(nutri_info *info, float val);
+void set_protein(nutri_info *info, float val);
+void set_carbs(nutri_info *info, float val);
+void set_fat(nutri_info *info, float val);
 
 void destory_nutri_info(nutri_info *info);
 

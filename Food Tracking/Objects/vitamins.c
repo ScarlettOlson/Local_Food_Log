@@ -63,17 +63,17 @@ float get_calcium(vitamin_info *info) { return info ? info->calcium : -1.0; }
 float get_iron(vitamin_info *info) { return info ? info->iron : -1.0; }
 float get_potassium(vitamin_info *info) { return info ? info->potassium : -1.0; }
 
-void set_vitamin_d(vitamin_info *info, float vitamin_d) {
-    if(info) info->vitamin_d = (vitamin_d < 0) ? -1 : vitamin_d;
+void set_vitamin_d(vitamin_info *info, float val) {
+    if(info) info->vitamin_d = (val < 0) ? -1 : val;
 }
-void set_calcium(vitamin_info *info, float calcium) {
-    if(info) info->calcium = (calcium < 0) ? -1 : calcium;
+void set_calcium(vitamin_info *info, float val) {
+    if(info) info->calcium = (val < 0) ? -1 : val;
 }
-void set_iron(vitamin_info *info, float iron) {
-    if(info) info->iron = (iron < 0) ? -1 : iron;
+void set_iron(vitamin_info *info, float val) {
+    if(info) info->iron = (val < 0) ? -1 : val;
 }
-void set_potassium(vitamin_info *info, float potassium) {
-    if(info) info->potassium = (potassium < 0) ? -1 : potassium;
+void set_potassium(vitamin_info *info, float val) {
+    if(info) info->potassium = (val < 0) ? -1 : val;
 }
 
 /**

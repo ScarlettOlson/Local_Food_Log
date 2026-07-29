@@ -65,23 +65,23 @@ float get_sodium(extra_nutri_info *info) { return info ? info->sodium : -1.0f; }
 float get_fiber(extra_nutri_info *info) { return info ? info->fiber : -1.0f; }
 float get_sugar(extra_nutri_info *info) { return info ? info->sugar : -1.0f; }
 
-void set_sat_fat(extra_nutri_info *info, float sat_fat) {
-    if (info) info->sat_fat = sat_fat < 0 ? -1.0f : sat_fat;
+void set_sat_fat(extra_nutri_info *info, float val) {
+    if (info) info->sat_fat = val < 0 ? -1.0f : val;
 }
-void set_trans_fat(extra_nutri_info *info, float trans_fat) {
-    if (info) info->trans_fat = trans_fat < 0 ? -1.0f : trans_fat;
+void set_trans_fat(extra_nutri_info *info, float val) {
+    if (info) info->trans_fat = val < 0 ? -1.0f : val;
 }
-void set_cholesterol(extra_nutri_info *info, float cholesterol) {
-    if (info) info->cholesterol = cholesterol < 0 ? -1.0f : cholesterol;
+void set_cholesterol(extra_nutri_info *info, float val) {
+    if (info) info->cholesterol = val < 0 ? -1.0f : val;
 }
-void set_sodium(extra_nutri_info *info, float sodium) {
-    if (info) info->sodium = sodium < 0 ? -1.0f : sodium;
+void set_sodium(extra_nutri_info *info, float val) {
+    if (info) info->sodium = val < 0 ? -1.0f : val;
 }
-void set_fiber(extra_nutri_info *info, float fiber) {
-    if (info) info->fiber = fiber < 0 ? -1.0f : fiber;
+void set_fiber(extra_nutri_info *info, float val) {
+    if (info) info->fiber = val < 0 ? -1.0f : val;
 }
-void set_sugar(extra_nutri_info *info, float sugar) {
-    if (info) info->sugar = sugar < 0 ? -1.0f : sugar;
+void set_sugar(extra_nutri_info *info, float val) {
+    if (info) info->sugar = val < 0 ? -1.0f : val;
 }
 
 
