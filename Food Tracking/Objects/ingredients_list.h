@@ -18,6 +18,7 @@ ingred_list *create_ingred_list();
 
 int add_ingred_list_item(ingred_list *list, ingredient *ingred, float portion);
 ingred_return *remove_ingred_list_item(ingred_list *list, char *name);
+int update_ingred_list_item_portion(ingred_list *list, char *name, float portion);
 
 ingred_return *search_ingred_list_item(ingred_list *list, char *name);
 float search_ingred_list_portion(ingred_list *list, char *name);

@@ -24,12 +24,12 @@ ingredient *remove_meal_ingreient(meal *meal_ptr, char *name);
 ingredient *set_portion_meal_ingredient(meal *meal_ptr, char *name, int portion);
 
 
-nutri_info get_meal_nutri_info(meal *meal_ptr);
-extra_nutri_info get_meal_extra_nutri_info(meal *meal_ptr);
-vitamin_info get_meal_vitamin_info(meal *meal_ptr);
-nutri_info get_meal_portion_nutri_info(meal *meal_ptr);
-extra_nutri_info get_meal_portion_extra_nutri_info(meal *meal_ptr);
-vitamin_info get_meal_portion_vitamin_info(meal *meal_ptr);
+nutri_info *get_meal_nutri_info(meal *meal_ptr);
+extra_nutri_info *get_meal_extra_nutri_info(meal *meal_ptr);
+vitamin_info *get_meal_vitamin_info(meal *meal_ptr);
+nutri_info *get_meal_portion_nutri_info(meal *meal_ptr);
+extra_nutri_info *get_meal_portion_extra_nutri_info(meal *meal_ptr);
+vitamin_info *get_meal_portion_vitamin_info(meal *meal_ptr);
 
 float get_meal_calories(meal *meal_ptr);
 float get_meal_portion_calories(meal *meal_ptr);
@@ -90,7 +90,7 @@ void set_meal_potassium(meal *meal_ptr, float potassium);
 void set_meal_portion_potassium(meal *meal_ptr, float potassium);
 
 
-int destory_meal(meal *meal_ptr);
+void destory_meal(meal *meal_ptr);
 
 
 #endif

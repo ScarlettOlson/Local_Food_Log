@@ -1,7 +1,7 @@
 #ifndef nutronal_info
 #define nutritional_info
 
-typedef struct nutri_info nutri_info;
+typedef struct nutri_info {} nutri_info;
 
 nutri_info *create_nutri_info(float cal, float protein, float carbs, float fat);
 nutri_info *duplicate_nutri_info(nutri_info *info);

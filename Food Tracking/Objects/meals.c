@@ -16,14 +16,12 @@ typedef struct {
     char *description;
     int  portions;
 
-    int num_ingredients;
-    int max_ingredients;
     ingred_list *ingreds;
     
-    int man_set_nutri;
-    nutri_info *nutrition;
-    extra_nutri_info *extra_nutrition;
-    vitamin_info *vitamin;
+    int set_nutri_man;
+    nutri_info *nutri;
+    extra_nutri_info *e_nutri;
+    vitamin_info *vit;
 } meal;
 
 
@@ -50,9 +48,9 @@ meal *create_meal(char *name, char *description, int portions, int set_nutrion_m
     strcpy(meal_ptr->description, description);
 
     meal_ptr->portions = portions;
-    meal_ptr->man_set_nutri = set_nutrion_manually;
+    meal_ptr->set_nutri_man = set_nutrion_manually;
 
-    meal_ptr->ingredient_list = create_ingred_list();
+    meal_ptr->ingreds = create_ingred_list();
     return meal_ptr;
 }
 
@@ -66,10 +64,10 @@ int set_meal_nutri_info(meal *meal_ptr, nutri_info *info) {
     if(!meal_ptr || !info) return 0;
     if(!meal_ptr->set_nutrion_manually) return 0;
 
-    if(meal_ptr->nutrition) update_nutri_info(meal_ptr->nutrition, info);
-    else meal_ptr->nutrition = copy_nutri_info(info);
+    if(meal_ptr->nutri) update_nutri_info(meal_ptr->nutri, info);
+    else meal_ptr->nutri = copy_nutri_info(info);
 
-    return meal_ptr->nutrition  != NULL;
+    return meal_ptr->nutri  != NULL;
 }
 /**
  * Sets the extra nutrional information of the meal if it can be manually set.
@@ -81,13 +79,13 @@ int set_meal_extra_nutri_info(meal *meal_ptr, extra_nutri_info *info) {
     if(!meal_ptr || !info) return 0;
     if(!meal_ptr->set_nutrion_manually) return 0;
 
-    if(meal_ptr->extra_nutrition) update_extra_nutri_info(meal_ptr->extra_nutrition, info);
-    else meal_ptr->extra_nutrition = copy_extra_nutri_info(info);
+    if(meal_ptr->e_nutri) update_extra_nutri_info(meal_ptr->e_nutri, info);
+    else meal_ptr->e_nutri = copy_extra_nutri_info(info);
 
-    return meal_ptr->extra_nutrition != NULL;
+    return meal_ptr->e_nutri != NULL;
 }
 /**
- * Sets the vitamin information of the meal if it can be manually set.
+ * Sets the vit information of the meal if it can be manually set.
  *      The info is copied and the orginal object is unchanged.
  * 
  * Returns non-zero if the information was succesfully set.
@@ -117,7 +115,7 @@ int add_meal_ingredient(meal *meal_ptr, ingredient *ingred, float portion) {
     if(!add_ingred_list_item(meal_ptr->ingreds, ingred, portion)) return 0;
 
     // Update Nutritional Information
-    if(!meal_ptr->man_set_nutri) {
+    if(!meal_ptr->set_nutri_man) {
         float old_cal = get_meal_calories(meal_ptr);
         float old_protein = get_meal_protein(meal_ptr);
         float old_carbs = get_meal_carbs(meal_ptr);
@@ -179,7 +177,7 @@ ingredient *remove_meal_ingreient(meal *meal_ptr, char *name) {
     float portion = tmp->portion;
 
     // Update Nutritional Information
-    if(!meal_ptr->man_set_nutri) {
+    if(!meal_ptr->set_nutri_man) {
         float old_cal =         get_meal_calories(meal_ptr);
         float old_protein =     get_meal_protein(meal_ptr);
         float old_carbs =       get_meal_carbs(meal_ptr);
@@ -235,247 +233,336 @@ ingredient *remove_meal_ingreient(meal *meal_ptr, char *name) {
 ingredient *set_portion_meal_ingredient(meal *meal_ptr, char *name, int portion) {
     if(!meal_ptr) return NULL;
 
-    ingredient *ingred = remove_ingred_list_item(meal_ptr->ingreds, name);
-    if(!ingred) { return NULL; }
+    update_ingred_list_item_portion(meal_ptr->ingreds, name, portion)
 }
 
 
-nutri_info get_meal_nutri_info(meal *meal_ptr);
-extra_nutri_info get_meal_extra_nutri_info(meal *meal_ptr);
-vitamin_info get_meal_vitamin_info(meal *meal_ptr);
-nutri_info get_meal_portion_nutri_info(meal *meal_ptr);
-extra_nutri_info get_meal_portion_extra_nutri_info(meal *meal_ptr);
-vitamin_info get_meal_portion_vitamin_info(meal *meal_ptr);
+/**
+ * Gets the nutrional information related to the meal
+ * 
+ * Returns a copy of the nutrional information for the meal
+ */
+nutri_info *get_meal_nutri_info(meal *meal_ptr) {
+    return meal_ptr ? duplicate_nutri_info(meal_ptr->nutri) : NULL;
+}
+/**
+ * Gets the extra nutrional information related to the meal
+ * 
+ * Returns a copy of the extra nutrional information for the meal
+ */
+extra_nutri_info *get_meal_extra_nutri_info(meal *meal_ptr) {
+    return meal_ptr ? duplicate_extra_nutri_info(meal_ptr->e_nutri) : NULL;
+}
+/**
+ * Gets the vitamin information related to the meal
+ * 
+ * Returns a copy of the vitamin information for the meal
+ */
+vitamin_info *get_meal_vitamin_info(meal *meal_ptr) {
+    return meal_ptr ? duplicate_vitamin_info(meal_ptr->vit) : NULL;
+}
+/**
+ * Gets the nutrional information for a single portion of the meal
+ * 
+ * Returns the nutrional information for a single portion of the meal
+ */
+nutri_info *get_meal_portion_nutri_info(meal *meal_ptr) {
+    if(!meal_ptr) return NULL;
+
+    nutri_info *info = meal_ptr->nutri;
+    if(!info) return NULL;
+
+    float portions = meal_ptr->portions;
+    float cal      = get_cal(info)     / portions;
+    float protein  = get_protein(info) / portions;
+    float carbs    = get_carbs(info)   / portions;
+    float fat      = get_fat(info)     / portions;
+
+    nutri_info *info_by_port = create_nutri_info(cal, protein, carbs, fat);
+    return info_by_port;
+}
+/**
+ * Gets the extra nutrional information for a single portion of the meal
+ * 
+ * Returns the extra nutrional information for a single portion of the meal
+ */
+extra_nutri_info *get_meal_portion_extra_nutri_info(meal *meal_ptr) {
+    if(!meal_ptr) return NULL;
+
+    extra_nutri_info *info = meal_ptr->e_nutri;
+    if(!info) return NULL;
+
+    float portions    = meal_ptr->portions;
+    float sat_fat     = get_sat_fat(info)     / portions;
+    float trans_fat   = get_trans_fat(info)   / portions;
+    float cholesterol = get_cholesterol(info) / portions;
+    float sodium      = get_sodium(info)      / portions;
+    float fiber       = get_fiber(info)       / portions;
+    float sugar       = get_sugar(info)       / portions;
+
+    nutri_info *info_by_port = create_extra_nutri_info(sat_fat, trans_fat, cholesterol, sodium, fiber, sugar);
+    return info_by_port;
+}
+/**
+ * Gets the vitamin information for a single portion of the meal
+ * 
+ * Returns the vitamin information for a single portion of the meal
+ */
+vitamin_info *get_meal_portion_vitamin_info(meal *meal_ptr) {
+    if(!meal_ptr) return NULL;
+
+    vitamin_info *info = meal_ptr->vit;
+    if(!info) return NULL;
+
+    float portions  = meal_ptr->portions;
+    float vitamin_d = get_viatmin_d(info) / portions;
+    float calcium   = get_calcium(info)   / portions;
+    float iron      = get_iron(info)      / portions;
+    float potassium = get_potassium(info) / portions;
+
+    nutri_info *info_by_port = create_extra_nutri_info(vitamin_d, calcium, iron, potassium);
+    return info_by_port;
+}
 
 
 // Getters and Setters
 float get_meal_calories(meal *meal_ptr) {
-    return meal_ptr ? get_cal(meal_ptr->nutrition) : -1.0;
+    return meal_ptr ? get_cal(meal_ptr->nutri) : -1.0;
 }
 float get_meal_portion_calories(meal *meal_ptr) {
-    return meal_ptr ? get_cal(meal_ptr->nutrition) / meal_ptr->portions : -1.0;
+    return meal_ptr ? get_cal(meal_ptr->nutri) / meal_ptr->portions : -1.0;
 }
 float get_meal_protein(meal *meal_ptr) {
-    return meal_ptr ? get_protein(meal_ptr->nutrition) : -1.0;
+    return meal_ptr ? get_protein(meal_ptr->nutri) : -1.0;
 }
 float get_meal_portion_protein(meal *meal_ptr) {
-    return meal_ptr ? get_protein(meal_ptr->nutrition) / meal_ptr->portions : -1.0;
+    return meal_ptr ? get_protein(meal_ptr->nutri) / meal_ptr->portions : -1.0;
 }
 float get_meal_carbs(meal *meal_ptr) {
-    return meal_ptr ? get_carbs(meal_ptr->nutrition) : -1.0;
+    return meal_ptr ? get_carbs(meal_ptr->nutri) : -1.0;
 }
 float get_meal_portion_carbs(meal *meal_ptr) {
-    return meal_ptr ? get_carbs(meal_ptr->nutrition) / meal_ptr->portions : -1.0;
+    return meal_ptr ? get_carbs(meal_ptr->nutri) / meal_ptr->portions : -1.0;
 }
 float get_meal_fat(meal *meal_ptr) {
-    return meal_ptr ? get_fat(meal_ptr->nutrition) : -1.0;
+    return meal_ptr ? get_fat(meal_ptr->nutri) : -1.0;
 }
 float get_meal_portion_fat(meal *meal_ptr) {
-    return meal_ptr ? get_fat(meal_ptr->nutrition) / meal_ptr->portions : -1.0;
+    return meal_ptr ? get_fat(meal_ptr->nutri) / meal_ptr->portions : -1.0;
 }
 float get_meal_sat_fat(meal *meal_ptr) {
-    return meal_ptr ? get_sat_fat(meal_ptr->extra_nutrition) : -1.0;
+    return meal_ptr ? get_sat_fat(meal_ptr->e_nutri) : -1.0;
 }
 float get_meal_portion_sat_fat(meal *meal_ptr) {
-    return meal_ptr ? get_sat_fat(meal_ptr->extra_nutrition) / meal_ptr->portions : -1.0;
+    return meal_ptr ? get_sat_fat(meal_ptr->e_nutri) / meal_ptr->portions : -1.0;
 }
 float get_meal_trans_fat(meal *meal_ptr) {
-    return meal_ptr ? get_trans_fat(meal_ptr->extra_nutrition) : -1.0;
+    return meal_ptr ? get_trans_fat(meal_ptr->e_nutri) : -1.0;
 }
 float get_meal_portion_trans_fat(meal *meal_ptr) {
-    return meal_ptr ? get_trans_fat(meal_ptr->extra_nutrition) / meal_ptr->portions : -1.0;
+    return meal_ptr ? get_trans_fat(meal_ptr->e_nutri) / meal_ptr->portions : -1.0;
 }
 float get_meal_cholesterol(meal *meal_ptr) {
-    return meal_ptr ? get_cholesterol(meal_ptr->extra_nutrition) : -1.0;
+    return meal_ptr ? get_cholesterol(meal_ptr->e_nutri) : -1.0;
 }
 float get_meal_portion_cholesterol(meal *meal_ptr) {
-    return meal_ptr ? get_cholesterol(meal_ptr->extra_nutrition) / meal_ptr->portions : -1.0;
+    return meal_ptr ? get_cholesterol(meal_ptr->e_nutri) / meal_ptr->portions : -1.0;
 }
 float get_meal_sodium(meal *meal_ptr) {
-    return meal_ptr ? get_sodium(meal_ptr->extra_nutrition) : -1.0;
+    return meal_ptr ? get_sodium(meal_ptr->e_nutri) : -1.0;
 }
 float get_meal_portion_sodium(meal *meal_ptr) {
-    return meal_ptr ? get_sodium(meal_ptr->extra_nutrition) / meal_ptr->portions : -1.0;
+    return meal_ptr ? get_sodium(meal_ptr->e_nutri) / meal_ptr->portions : -1.0;
 }
 float get_meal_fiber(meal *meal_ptr) {
-    return meal_ptr ? get_fiber(meal_ptr->extra_nutrition) : -1.0;
+    return meal_ptr ? get_fiber(meal_ptr->e_nutri) : -1.0;
 }
 float get_meal_portion_fiber(meal *meal_ptr) {
-    return meal_ptr ? get_fiber(meal_ptr->extra_nutrition) / meal_ptr->portions : -1.0;
+    return meal_ptr ? get_fiber(meal_ptr->e_nutri) / meal_ptr->portions : -1.0;
 }
 float get_meal_sugar(meal *meal_ptr) {
-    return meal_ptr ? get_sugar(meal_ptr->extra_nutrition) : -1.0;
+    return meal_ptr ? get_sugar(meal_ptr->e_nutri) : -1.0;
 }
 float get_meal_portion_sugar(meal *meal_ptr) {
-    return meal_ptr ? get_sugar(meal_ptr->extra_nutrition) / meal_ptr->portions : -1.0;
+    return meal_ptr ? get_sugar(meal_ptr->e_nutri) / meal_ptr->portions : -1.0;
 }
 float get_meal_vitamin_d(meal *meal_ptr) {
-    return meal_ptr ? get_vitamin_d(meal_ptr->vitamin) : -1.0;
+    return meal_ptr ? get_vitamin_d(meal_ptr->vit) : -1.0;
 }
 float get_meal_portion_vitamin_d(meal *meal_ptr) {
-    return meal_ptr ? get_vitamin_d(meal_ptr->vitamin) / meal_ptr->portions : -1.0;
+    return meal_ptr ? get_vitamin_d(meal_ptr->vit) / meal_ptr->portions : -1.0;
 }
 float get_meal_calcium(meal *meal_ptr) {
-    return meal_ptr ? get_calcium(meal_ptr->vitamin) : -1.0;
+    return meal_ptr ? get_calcium(meal_ptr->vit) : -1.0;
 }
 float get_meal_portion_calcium(meal *meal_ptr) {
-    return meal_ptr ? get_calcium(meal_ptr->vitamin) / meal_ptr->portions : -1.0;
+    return meal_ptr ? get_calcium(meal_ptr->vit) / meal_ptr->portions : -1.0;
 }
 float get_meal_iron(meal *meal_ptr) {
-    return meal_ptr ? get_iron(meal_ptr->vitamin) : -1.0;
+    return meal_ptr ? get_iron(meal_ptr->vit) : -1.0;
 }
 float get_meal_portion_iron(meal *meal_ptr) {
-    return meal_ptr ? get_iron(meal_ptr->vitamin) / meal_ptr->portions : -1.0;
+    return meal_ptr ? get_iron(meal_ptr->vit) / meal_ptr->portions : -1.0;
 }
 float get_meal_potassium(meal *meal_ptr) {
-    return meal_ptr ? get_potassium(meal_ptr->vitamin) : -1.0;
+    return meal_ptr ? get_potassium(meal_ptr->vit) : -1.0;
 }
 float get_meal_portion_potassium(meal *meal_ptr) {
-    return meal_ptr ? get_potassium(meal_ptr->vitamin) / meal_ptr->portions : -1.0;
+    return meal_ptr ? get_potassium(meal_ptr->vit) / meal_ptr->portions : -1.0;
 }
 
 
 void set_meal_calories(meal *meal_ptr, float cal) {
-    if (meal_ptr && meal_ptr->man_set_nutri) {
-        set_cal(meal_ptr->nutrition, cal);
+    if (meal_ptr && meal_ptr->set_nutri_man) {
+        set_cal(meal_ptr->nutri, cal);
     }
 }
 void set_meal_portion_calories(meal *meal_ptr, float cal) {
-    if (meal_ptr && meal_ptr->man_set_nutri) {
-        set_cal(meal_ptr->nutrition, cal * meal_ptr->portions);
+    if (meal_ptr && meal_ptr->set_nutri_man) {
+        set_cal(meal_ptr->nutri, cal * meal_ptr->portions);
     }
 }
 void set_meal_protein(meal *meal_ptr, float protein) {
-    if (meal_ptr && meal_ptr->man_set_nutri) {
-        set_protein(meal_ptr->nutrition, protein);
+    if (meal_ptr && meal_ptr->set_nutri_man) {
+        set_protein(meal_ptr->nutri, protein);
     }
 }
 void set_meal_portion_protein(meal *meal_ptr, float protein) {
-    if (meal_ptr && meal_ptr->man_set_nutri) {
-        set_protein(meal_ptr->nutrition, protein * meal_ptr->portions);
+    if (meal_ptr && meal_ptr->set_nutri_man) {
+        set_protein(meal_ptr->nutri, protein * meal_ptr->portions);
     }
 }
 void set_meal_carbs(meal *meal_ptr, float carbs) {
-    if (meal_ptr && meal_ptr->man_set_nutri) {
-        set_carbs(meal_ptr->nutrition, carbs);
+    if (meal_ptr && meal_ptr->set_nutri_man) {
+        set_carbs(meal_ptr->nutri, carbs);
     }
 }
 void set_meal_portion_carbs(meal *meal_ptr, float carbs) {
-    if (meal_ptr && meal_ptr->man_set_nutri) {
-        set_carbs(meal_ptr->nutrition, carbs * meal_ptr->portions);
+    if (meal_ptr && meal_ptr->set_nutri_man) {
+        set_carbs(meal_ptr->nutri, carbs * meal_ptr->portions);
     }
 }
 void set_meal_fat(meal *meal_ptr, float fat) {
-    if (meal_ptr && meal_ptr->man_set_nutri) {
-        set_fat(meal_ptr->nutrition, fat);
+    if (meal_ptr && meal_ptr->set_nutri_man) {
+        set_fat(meal_ptr->nutri, fat);
     }
 }
 void set_meal_portion_fat(meal *meal_ptr, float fat) {
-    if (meal_ptr && meal_ptr->man_set_nutri) {
-        set_fat(meal_ptr->nutrition, fat * meal_ptr->portions);
+    if (meal_ptr && meal_ptr->set_nutri_man) {
+        set_fat(meal_ptr->nutri, fat * meal_ptr->portions);
     }
 }
 void set_meal_sat_fat(meal *meal_ptr, float sat_fat) {
-    if (meal_ptr && meal_ptr->man_set_nutri) {
-        set_sat_fat(meal_ptr->extra_nutrition, sat_fat);
+    if (meal_ptr && meal_ptr->set_nutri_man) {
+        set_sat_fat(meal_ptr->e_nutri, sat_fat);
     }
 }
 void set_meal_portion_sat_fat(meal *meal_ptr, float sat_fat) {
-    if (meal_ptr && meal_ptr->man_set_nutri) {
-        set_sat_fat(meal_ptr->extra_nutrition, sat_fat * meal_ptr->portions);
+    if (meal_ptr && meal_ptr->set_nutri_man) {
+        set_sat_fat(meal_ptr->e_nutri, sat_fat * meal_ptr->portions);
     }
 }
 void set_meal_trans_fat(meal *meal_ptr, float trans_fat) {
-    if (meal_ptr && meal_ptr->man_set_nutri) {
-        set_trans_fat(meal_ptr->extra_nutrition, trans_fat);
+    if (meal_ptr && meal_ptr->set_nutri_man) {
+        set_trans_fat(meal_ptr->e_nutri, trans_fat);
     }
 }
 void set_meal_portion_trans_fat(meal *meal_ptr, float trans_fat) {
-    if (meal_ptr && meal_ptr->man_set_nutri) {
-        set_trans_fat(meal_ptr->extra_nutrition, trans_fat * meal_ptr->portions);
+    if (meal_ptr && meal_ptr->set_nutri_man) {
+        set_trans_fat(meal_ptr->e_nutri, trans_fat * meal_ptr->portions);
     }
 }
 void set_meal_cholesterol(meal *meal_ptr, float cholesterol) {
-    if (meal_ptr && meal_ptr->man_set_nutri) {
-        set_cholesterol(meal_ptr->extra_nutrition, cholesterol);
+    if (meal_ptr && meal_ptr->set_nutri_man) {
+        set_cholesterol(meal_ptr->e_nutri, cholesterol);
     }
 }
 void set_meal_portion_cholesterol(meal *meal_ptr, float cholesterol) {
-    if (meal_ptr && meal_ptr->man_set_nutri) {
-        set_cholesterol(meal_ptr->extra_nutrition, cholesterol * meal_ptr->portions);
+    if (meal_ptr && meal_ptr->set_nutri_man) {
+        set_cholesterol(meal_ptr->e_nutri, cholesterol * meal_ptr->portions);
     }
 }
 void set_meal_sodium(meal *meal_ptr, float sodium) {
-    if (meal_ptr && meal_ptr->man_set_nutri) {
-        set_sodium(meal_ptr->extra_nutrition, sodium);
+    if (meal_ptr && meal_ptr->set_nutri_man) {
+        set_sodium(meal_ptr->e_nutri, sodium);
     }
 }
 void set_meal_portion_sodium(meal *meal_ptr, float sodium) {
-    if (meal_ptr && meal_ptr->man_set_nutri) {
-        set_sodium(meal_ptr->extra_nutrition, sodium * meal_ptr->portions);
+    if (meal_ptr && meal_ptr->set_nutri_man) {
+        set_sodium(meal_ptr->e_nutri, sodium * meal_ptr->portions);
     }
 }
 void set_meal_fiber(meal *meal_ptr, float fiber) {
-    if (meal_ptr && meal_ptr->man_set_nutri) {
-        set_fiber(meal_ptr->extra_nutrition, fiber);
+    if (meal_ptr && meal_ptr->set_nutri_man) {
+        set_fiber(meal_ptr->e_nutri, fiber);
     }
 }
 void set_meal_portion_fiber(meal *meal_ptr, float fiber) {
-    if (meal_ptr && meal_ptr->man_set_nutri) {
-        set_fiber(meal_ptr->extra_nutrition, fiber * meal_ptr->portions);
+    if (meal_ptr && meal_ptr->set_nutri_man) {
+        set_fiber(meal_ptr->e_nutri, fiber * meal_ptr->portions);
     }
 }
 void set_meal_sugar(meal *meal_ptr, float sugar) {
-    if (meal_ptr && meal_ptr->man_set_nutri) {
-        set_sugar(meal_ptr->extra_nutrition, sugar);
+    if (meal_ptr && meal_ptr->set_nutri_man) {
+        set_sugar(meal_ptr->e_nutri, sugar);
     }
 }
 void set_meal_portion_sugar(meal *meal_ptr, float sugar) {
-    if (meal_ptr && meal_ptr->man_set_nutri) {
-        set_sugar(meal_ptr->extra_nutrition, sugar * meal_ptr->portions);
+    if (meal_ptr && meal_ptr->set_nutri_man) {
+        set_sugar(meal_ptr->e_nutri, sugar * meal_ptr->portions);
     }
 }
 void set_meal_vitamin_d(meal *meal_ptr, float vit_d) {
-    if (meal_ptr && meal_ptr->man_set_nutri) {
-        set_vitamin_d(meal_ptr->extra_nutrition, vit_d);
+    if (meal_ptr && meal_ptr->set_nutri_man) {
+        set_vitamin_d(meal_ptr->e_nutri, vit_d);
     }
 }
 void set_meal_portion_vitamin_d(meal *meal_ptr, float vit_d) {
-    if (meal_ptr && meal_ptr->man_set_nutri) {
-        set_vitamin_d(meal_ptr->vitamin, vit_d * meal_ptr->portions);
+    if (meal_ptr && meal_ptr->set_nutri_man) {
+        set_vitamin_d(meal_ptr->vit, vit_d * meal_ptr->portions);
     }
 }
 void set_meal_calcium(meal *meal_ptr, float calcium) {
-    if (meal_ptr && meal_ptr->man_set_nutri) {
-        set_calcium(meal_ptr->vitamin, calcium);
+    if (meal_ptr && meal_ptr->set_nutri_man) {
+        set_calcium(meal_ptr->vit, calcium);
     }
 }
 void set_meal_portion_calcium(meal *meal_ptr, float calcium) {
-    if (meal_ptr && meal_ptr->man_set_nutri) {
-        set_calcium(meal_ptr->vitamin, calcium * meal_ptr->portions);
+    if (meal_ptr && meal_ptr->set_nutri_man) {
+        set_calcium(meal_ptr->vit, calcium * meal_ptr->portions);
     }
 }
 void set_meal_iron(meal *meal_ptr, float iron) {
-    if (meal_ptr && meal_ptr->man_set_nutri) {
-        set_iron(meal_ptr->vitamin, iron);
+    if (meal_ptr && meal_ptr->set_nutri_man) {
+        set_iron(meal_ptr->vit, iron);
     }
 }
 void set_meal_portion_iron(meal *meal_ptr, float iron) {
-    if (meal_ptr && meal_ptr->man_set_nutri) {
-        set_iron(meal_ptr->vitamin, iron * meal_ptr->portions);
+    if (meal_ptr && meal_ptr->set_nutri_man) {
+        set_iron(meal_ptr->vit, iron * meal_ptr->portions);
     }
 }
 void set_meal_potassium(meal *meal_ptr, float potassium) {
-    if (meal_ptr && meal_ptr->man_set_nutri) {
-        set_potassium(meal_ptr->vitamin, potassium);
+    if (meal_ptr && meal_ptr->set_nutri_man) {
+        set_potassium(meal_ptr->vit, potassium);
     }
 }
 void set_meal_portion_potassium(meal *meal_ptr, float potassium) {
-    if (meal_ptr && meal_ptr->man_set_nutri) {
-        set_potassium(meal_ptr->vitamin, potassium * meal_ptr->portions);
+    if (meal_ptr && meal_ptr->set_nutri_man) {
+        set_potassium(meal_ptr->vit, potassium * meal_ptr->portions);
     }
 }
 
 
 
-int destory_meal(meal *meal_ptr);
+void destory_meal(meal *meal_ptr) {
+    if(!meal_ptr) return;
+
+    destory_nutri_info(meal_ptr->nutri);
+    destroy_extra_nutri_info(meal_ptr->e_nutri);
+    destory_vitamin_info(meal_ptr->vit);
+    destroy_ingred_list(meal_ptr->ingreds);
+
+    free(meal_ptr->name);
+    free(meal_ptr->description);
+}

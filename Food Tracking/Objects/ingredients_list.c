@@ -63,7 +63,7 @@ int add_ingred_list_item(ingred_list *list, ingredient *ingred, float portion) {
 /** 
  * Removes an ingredient from the ingredient list
  * 
- * Returns 0 if the ingredient does not exist or the operation failed, otherwise returns 1
+ * Returns an ingred_return object with the removed ingredient or NULL if removal failed
  */
 ingred_return *remove_ingred_list_item(ingred_list *list, char *name) {
     if(!list | !name) return NULL;
@@ -96,26 +96,46 @@ ingred_return *remove_ingred_list_item(ingred_list *list, char *name) {
     }
     return return_val;
 }
+/**
+ * Searches for an ingredient by name and updates it's portion in the list
+ * 
+ * Returns 1 if the portion was updated othersie returns 0
+ */
+int update_ingred_list_item_portion(ingred_list *list, char *name, float portion) {
+    if(!list || !name) return 0;
+
+    for(int i=0; i<list->num; i++) {
+        if(strcmp(list->ingreds[i]->name, name)) {
+            list->portions[i] = (portion < 0) ? -1.0 : portion;
+            return 1;
+        }
+    }
+    
+    return 0;
+}
+
+
 
 /**
  * Searchs the ingredient list for an ingredient with the given name
  * 
- * Returns a pointer to the ingredient if it exists, Otherwise returns a NULL pointer
- */
+ * Returns an ingred_return object with the given ingredient
+ **/
 ingred_return *search_ingred_list_item(ingred_list *list, char *name) {
     if(!list || !name) return NULL;
 
     for(int i=0; i<list->num; i++) {
         if(strcmp(list->ingreds[i]->name, name)) {
-            ingredient *ingred = list->ingreds[i];
-            float portion = list->portions[i];
             ingred_return *return_val = malloc(sizeof(ingred_return));
             if(!return_val) return NULL;
-            else {
-                return_val->ingred = ingred;
-                return_val->portion = portion;
-                return return_val;
-            }
+
+            ingredient *ingred = list->ingreds[i];
+            float portion = list->portions[i];
+
+            // Create Return object
+            return_val->ingred = ingred;
+            return_val->portion = portion;
+            return return_val;
         }
     }
 
@@ -140,7 +160,8 @@ float search_ingred_list_portion(ingred_list *list, char *name) {
  *      If the ingredient does not exist it is simply added to the list
  *      The new ingredient is copied and the passed ingredient is unchanged
  * 
- * Returns the old ingredient if it exists, Otherwise returns a NULL pointer
+ * Returns an ingred_return object with the ingredient and portion that was 
+ *      replaced, if the ingredient couldn't be replaced a NULL pointer is returned
  */
 ingred_return *replace_ingred_list_item(ingred_list *list, ingredient *ingred, float portion) {
     if(!list || !ingred) return NULL;
@@ -195,6 +216,11 @@ ingred_list *duplicate_ingred_list(ingred_list *list) {
 }
 
 int destroy_ingred_list(ingred_list *list) {
+    if(!list) return 0;
 
+    for(int i=0; i<list->num; i++) {
+        destroy_ingredient(list->ingreds[i]);
+    }
+    free(list);
 }
 
