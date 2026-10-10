@@ -1,13 +1,13 @@
-#include <stdlib.h>;
+#include <stdlib.h>
 #include "vitamins.h"
 
 
-typedef struct{
+struct vitamin_info {
     float     vitamin_d;      // mcg
     float     calcium;    // mg
     float     iron;       // mg
     float     potassium;   // mg
-} vitamin_info;
+};
 
 /**
  * Creates a vitamin info object with the given information
@@ -79,7 +79,7 @@ void set_potassium(vitamin_info *info, float val) {
 /**
  * Destroys the given vitamin information and frees the associated memory
  */
-void destory_vitamin_info(vitamin_info *info) {
+void destroy_vitamin_info(vitamin_info *info) {
     free(info);
     return;
 }

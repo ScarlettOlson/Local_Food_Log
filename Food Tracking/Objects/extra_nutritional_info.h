@@ -1,7 +1,8 @@
 #ifndef extra_nutritional_info
-#define extra_nutriontal_info
+#define extra_nutritional_info
 
 typedef struct extra_nutri_info extra_nutri_info;
+
 
 extra_nutri_info *create_extra_nutri_info(float sat_fat, float trans_fat, float cholesterol, float sodium, float fiber, float sugar);
 extra_nutri_info *duplicate_extra_nutri_info(extra_nutri_info *info);

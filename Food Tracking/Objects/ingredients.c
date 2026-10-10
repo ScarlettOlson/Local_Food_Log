@@ -1,24 +1,11 @@
-#include <stdlib.h>;
-#include "ingredients.h";
-#include "nutritional_info.h";
-#include "extra_nutritional_info.h";
-#include "vitamins.h";
+#include <stdlib.h>
+#include <string.h>
+#include "ingredients.h"
+#include "nutritional_info.h"
+#include "extra_nutritional_info.h"
+#include "vitamins.h"
 
-/**
- * A structure for holding information about generic ingredients.
- * 
- * All values are in grams unless otherwise noted
- */
-typedef struct {
-    char *name;
-    char *description;
-    float  portion_size;
 
-    // Nutrional Information
-    nutri_info *nutri;
-    extra_nutri_info *e_nutri;
-    vitamin_info *vit
-} ingredient;
 
 /**
  * Creates a new ingredient with a copy of the name, description and portion size.
@@ -118,7 +105,7 @@ int set_ingred_extra_nutri_info(ingredient *ingred, extra_nutri_info *info) {
 int set_ingred_vitamins(ingredient *ingred, vitamin_info *info) {
     if(!ingred || !info) return 0;
 
-    if(ingred->vit) copy_nutri_info(ingred->vit, info);
+    if(ingred->vit) copy_vitamin_info(ingred->vit, info);
     else ingred->vit = duplicate_vitamin_info(info);
 
     return ingred->vit != NULL;
@@ -126,7 +113,7 @@ int set_ingred_vitamins(ingredient *ingred, vitamin_info *info) {
 
 // Getters and Setters
 float get_ingred_calories(ingredient *ingred) {
-    return (ingred) ? get_calories(ingred->nutri) : -1.0;
+    return (ingred) ? get_cal(ingred->nutri) : -1.0;
 }
 float get_ingred_protein(ingredient *ingred) {
     return (ingred) ? get_protein(ingred->nutri) : -1.0;
@@ -168,7 +155,7 @@ float get_ingred_potassium(ingredient *ingred) {
     return (ingred) ? get_potassium(ingred->vit) : -1.0;
 }
 
-void set_ingred_calories(ingredient *ingred, float val) { if(ingred) set_calories(ingred->nutri, val); }
+void set_ingred_calories(ingredient *ingred, float val) { if(ingred) set_cal(ingred->nutri, val); }
 void set_ingred_protein(ingredient *ingred, float val) { if(ingred) set_protein(ingred->nutri, val); }
 void set_ingred_carbs(ingredient *ingred, float val) { if(ingred) set_carbs(ingred->nutri, val); }
 void set_ingred_fat(ingredient *ingred, float val) { if(ingred) set_fat(ingred->nutri, val); }

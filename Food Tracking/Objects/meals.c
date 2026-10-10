@@ -1,28 +1,11 @@
 #include <stdlib.h>
+#include <string.h>
 #include "ingredients.h"
-#include "ingredients_list.h";
-#include "nutritional_info.h";
-#include "extra_nutritional_info.h";
-#include "vitamins.h";
-#include "meals.h";
-
-/**
- * A structure for holding information about a user created meal.
- * 
- * All values are in grams unless otherwise noted
- */
-typedef struct {
-    char *name;
-    char *description;
-    int  portions;
-
-    ingred_list *ingreds;
-    
-    int set_nutri_man;
-    nutri_info *nutri;
-    extra_nutri_info *e_nutri;
-    vitamin_info *vit;
-} meal;
+#include "ingredients_list.h"
+#include "nutritional_info.h"
+#include "extra_nutritional_info.h"
+#include "vitamins.h"
+#include "meals.h"
 
 
 /**
@@ -31,7 +14,7 @@ typedef struct {
  * set_nutrition_manually: A flag that when set allows nutritional values to be
  *      manually set instead of based on the ingredients
  */
-meal *create_meal(char *name, char *description, int portions, int set_nutrion_manually) {
+meal *create_meal(char *name, char *description, int portions, int set_nutri_man) {
     if(!name || !description) return NULL;
     meal *meal_ptr = malloc(sizeof(meal));
     if(!meal_ptr) return NULL;
@@ -48,7 +31,7 @@ meal *create_meal(char *name, char *description, int portions, int set_nutrion_m
     strcpy(meal_ptr->description, description);
 
     meal_ptr->portions = portions;
-    meal_ptr->set_nutri_man = set_nutrion_manually;
+    meal_ptr->set_nutri_man = set_nutri_man;
 
     meal_ptr->ingreds = create_ingred_list();
     return meal_ptr;
@@ -62,10 +45,10 @@ meal *create_meal(char *name, char *description, int portions, int set_nutrion_m
  */
 int set_meal_nutri_info(meal *meal_ptr, nutri_info *info) {
     if(!meal_ptr || !info) return 0;
-    if(!meal_ptr->set_nutrion_manually) return 0;
+    if(!meal_ptr->set_nutri_man) return 0;
 
-    if(meal_ptr->nutri) update_nutri_info(meal_ptr->nutri, info);
-    else meal_ptr->nutri = copy_nutri_info(info);
+    if(meal_ptr->nutri) { copy_nutri_info(meal_ptr->nutri, info); }
+    else { meal_ptr->nutri = duplicate_nutri_info(info); }
 
     return meal_ptr->nutri  != NULL;
 }
@@ -77,10 +60,10 @@ int set_meal_nutri_info(meal *meal_ptr, nutri_info *info) {
  */
 int set_meal_extra_nutri_info(meal *meal_ptr, extra_nutri_info *info) {
     if(!meal_ptr || !info) return 0;
-    if(!meal_ptr->set_nutrion_manually) return 0;
+    if(!meal_ptr->set_nutri_man) return 0;
 
-    if(meal_ptr->e_nutri) update_extra_nutri_info(meal_ptr->e_nutri, info);
-    else meal_ptr->e_nutri = copy_extra_nutri_info(info);
+    if(meal_ptr->e_nutri) copy_extra_nutri_info(meal_ptr->e_nutri, info);
+    else meal_ptr->e_nutri = duplicate_extra_nutri_info(info);
 
     return meal_ptr->e_nutri != NULL;
 }
@@ -92,12 +75,12 @@ int set_meal_extra_nutri_info(meal *meal_ptr, extra_nutri_info *info) {
  */
 int set_meal_vitamin_info(meal *meal_ptr, vitamin_info *info) {
     if(!meal_ptr || !info) return 0;
-    if(meal_ptr->set_nutrion_manually) return 0;
+    if(meal_ptr->set_nutri_man) return 0;
 
-    if(meal_ptr->viatmins) update_extra_nutri_info(meal_ptr->viatmins, info);
-    else meal_ptr->viatmins = copy_vitamin_info(info);
+    if(meal_ptr->vit) copy_vitamin_info(meal_ptr->vit, info);
+    else meal_ptr->vit = duplicate_vitamin_info(info);
 
-    return meal_ptr->viatmins != NULL;
+    return meal_ptr->vit != NULL;
 }
 
 /**
@@ -153,7 +136,7 @@ int add_meal_ingredient(meal *meal_ptr, ingredient *ingred, float portion) {
         if (ingred_sat_fat >= 0) set_meal_sat_fat(meal_ptr, ingred_sat_fat + old_sat_fat);
         if (ingred_trans_fat >= 0) set_meal_trans_fat(meal_ptr, ingred_trans_fat + old_trans_fat);
         if (ingred_cholesterol >= 0) set_meal_cholesterol(meal_ptr, ingred_cholesterol + old_cholesterol);
-        if (ingred_sodium >= 0) set_meal_sodium(meal_ptr, ingred_sugar + old_sugar);
+        if (ingred_sodium >= 0) set_meal_sodium(meal_ptr, ingred_sugar + old_sodium);
         if (ingred_fiber >= 0) set_meal_fiber(meal_ptr, ingred_fiber + old_fiber);
         if (ingred_sugar >= 0) set_meal_sugar(meal_ptr, ingred_sugar + old_sugar);
         if (ingred_vitamin_d >= 0) set_meal_vitamin_d(meal_ptr, ingred_vitamin_d + old_vitamin_d);
@@ -215,7 +198,7 @@ ingredient *remove_meal_ingreient(meal *meal_ptr, char *name) {
         if(ingred_sat_fat >= 0)     { set_meal_sat_fat(meal_ptr, (old_sat_fat - ingred_sat_fat)); }
         if(ingred_trans_fat >= 0)   { set_meal_trans_fat(meal_ptr, (old_trans_fat - ingred_trans_fat)); }
         if(ingred_cholesterol >= 0) { set_meal_cholesterol(meal_ptr, (old_cholesterol - ingred_cholesterol)); }
-        if(ingred_sodium >= 0)      { set_meal_sodium(meal_ptr, (old_sugar - ingred_sodium)); }
+        if(ingred_sodium >= 0)      { set_meal_sodium(meal_ptr, (old_sodium - ingred_sodium)); }
         if(ingred_fiber >= 0)       { set_meal_fiber(meal_ptr, (old_fiber - ingred_fiber)); }
         if(ingred_sugar >= 0)       { set_meal_sugar(meal_ptr, (old_sugar - ingred_sugar)); }
         if(ingred_vitamin_d >= 0)   { set_meal_vitamin_d(meal_ptr, (old_vitamin_d - ingred_vitamin_d)); }
@@ -228,12 +211,14 @@ ingredient *remove_meal_ingreient(meal *meal_ptr, char *name) {
 /**
  * Changes the portion of a given ingredient used in the meal
  * 
- * Returns a pointer the changed ingredient or NULL if the ingredient could not be updated
+ * Returns a pointer to the changed ingredient or NULL if the ingredient could not be updated
  */
 ingredient *set_portion_meal_ingredient(meal *meal_ptr, char *name, int portion) {
     if(!meal_ptr) return NULL;
 
-    update_ingred_list_item_portion(meal_ptr->ingreds, name, portion)
+    update_ingred_list_item_portion(meal_ptr->ingreds, name, portion);
+
+    return search_ingred_list_item(meal_ptr->ingreds, meal_ptr->name)->ingred;
 }
 
 
@@ -300,7 +285,7 @@ extra_nutri_info *get_meal_portion_extra_nutri_info(meal *meal_ptr) {
     float fiber       = get_fiber(info)       / portions;
     float sugar       = get_sugar(info)       / portions;
 
-    nutri_info *info_by_port = create_extra_nutri_info(sat_fat, trans_fat, cholesterol, sodium, fiber, sugar);
+    extra_nutri_info *info_by_port = create_extra_nutri_info(sat_fat, trans_fat, cholesterol, sodium, fiber, sugar);
     return info_by_port;
 }
 /**
@@ -315,12 +300,12 @@ vitamin_info *get_meal_portion_vitamin_info(meal *meal_ptr) {
     if(!info) return NULL;
 
     float portions  = meal_ptr->portions;
-    float vitamin_d = get_viatmin_d(info) / portions;
+    float vitamin_d = get_vitamin_d(info) / portions;
     float calcium   = get_calcium(info)   / portions;
     float iron      = get_iron(info)      / portions;
     float potassium = get_potassium(info) / portions;
 
-    nutri_info *info_by_port = create_extra_nutri_info(vitamin_d, calcium, iron, potassium);
+    vitamin_info *info_by_port = create_vitamin_info(vitamin_d, calcium, iron, potassium);
     return info_by_port;
 }
 
@@ -514,7 +499,7 @@ void set_meal_portion_sugar(meal *meal_ptr, float sugar) {
 }
 void set_meal_vitamin_d(meal *meal_ptr, float vit_d) {
     if (meal_ptr && meal_ptr->set_nutri_man) {
-        set_vitamin_d(meal_ptr->e_nutri, vit_d);
+        set_vitamin_d(meal_ptr->vit, vit_d);
     }
 }
 void set_meal_portion_vitamin_d(meal *meal_ptr, float vit_d) {
@@ -558,9 +543,9 @@ void set_meal_portion_potassium(meal *meal_ptr, float potassium) {
 void destory_meal(meal *meal_ptr) {
     if(!meal_ptr) return;
 
-    destory_nutri_info(meal_ptr->nutri);
+    destroy_nutri_info(meal_ptr->nutri);
     destroy_extra_nutri_info(meal_ptr->e_nutri);
-    destory_vitamin_info(meal_ptr->vit);
+    destroy_vitamin_info(meal_ptr->vit);
     destroy_ingred_list(meal_ptr->ingreds);
 
     free(meal_ptr->name);

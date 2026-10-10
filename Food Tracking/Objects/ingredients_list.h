@@ -1,4 +1,8 @@
-#include "ingredients.h";
+#include "ingredients.h"
+
+
+#ifndef ingredients_list
+#define ingredients_list
 
 /**
  * A structure for holding a list of ingredients
@@ -27,3 +31,4 @@ ingred_list *duplicate_ingred_list(ingred_list *list);
 
 int destroy_ingred_list(ingred_list *list);
 
+#endif

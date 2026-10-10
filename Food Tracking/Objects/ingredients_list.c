@@ -1,16 +1,17 @@
-#include <stdlib.h>;
-#include "ingredients.h";
-#include "ingredients_list.h";
+#include <stdlib.h>
+#include <string.h>
+#include "ingredients.h"
+#include "ingredients_list.h"
 
 /**
  * A structure for holding a list of ingredients
  */
-typedef struct {
+struct ingred_list {
     int num;
     int max;
     float *portions;
     ingredient  **ingreds;
-} ingred_list;
+};
 
 // Creates an empty ingredient list
 ingred_list *create_ingred_list() {
@@ -38,7 +39,7 @@ int add_ingred_list_item(ingred_list *list, ingredient *ingred, float portion) {
     // Allocate more memory
     if(list->num == list->max) {
         int tmp_max = 2 * list->max;
-        int tmp_portions = malloc(tmp_max * sizeof(float));
+        float *tmp_portions = malloc(tmp_max * sizeof(float));
         if(!tmp_portions) return 0;
         ingredient **tmp_ingreds = malloc(tmp_max * sizeof(ingred_list*));
         if(!tmp_ingreds) return 0;
@@ -53,7 +54,7 @@ int add_ingred_list_item(ingred_list *list, ingredient *ingred, float portion) {
         list->portions = tmp_portions;
         list->ingreds = tmp_ingreds;
     }
-
+    
     list->portions[list->num] = portion;
     list->ingreds[list->num] = ingred;
     list->num++;
@@ -172,7 +173,7 @@ ingred_return *replace_ingred_list_item(ingred_list *list, ingredient *ingred, f
             // Allocate new memory
             ingredient *new_ingred = duplicate_ingredient(ingred);
             ingred_return *return_val = malloc(sizeof(ingred_return));
-            if(!return_val) destroy_ingred(new_ingred);
+            if(!return_val) destroy_ingredient(new_ingred);
             if(!new_ingred) return NULL;
 
             // Save old ingredient info
@@ -222,5 +223,7 @@ int destroy_ingred_list(ingred_list *list) {
         destroy_ingredient(list->ingreds[i]);
     }
     free(list);
+    
+    return 1;
 }
 

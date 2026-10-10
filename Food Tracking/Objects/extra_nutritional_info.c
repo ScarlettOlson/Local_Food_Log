@@ -1,14 +1,15 @@
-#include <stdlib.h>;
-#include "extra_nutritional_info.h";
+#include <stdlib.h>
+#include "extra_nutritional_info.h"
 
-typedef struct {
+
+struct extra_nutri_info {
     float     sat_fat;
     float     trans_fat;
     float     cholesterol; // mg
     float     sodium;      // mg
     float     fiber;
     float     sugar;
-} extra_nutri_info;
+};
 
 /**
  * Creates an extra nutriional information object
@@ -19,12 +20,12 @@ extra_nutri_info *create_extra_nutri_info(float sat_fat, float trans_fat, float 
     extra_nutri_info *info = malloc(sizeof(extra_nutri_info));
     if(!info) return NULL;
 
-    info->sat_fat = sat_fat;
-    info->trans_fat = trans_fat;
-    info->cholesterol = cholesterol;
-    info->sodium = sodium;
-    info->fiber = fiber;
-    info->sugar = sugar;
+    info->sat_fat     = (sat_fat < 0)     ? -1.0 : sat_fat;
+    info->trans_fat   = (trans_fat < 0)   ? -1.0 : trans_fat;
+    info->cholesterol = (cholesterol < 0) ? -1.0 : cholesterol;
+    info->sodium      = (sodium < 0)      ? -1.0 : sodium;
+    info->fiber       = (fiber < 0)       ? -1.0 : fiber;
+    info->sugar       = (sugar < 0)       ? -1.0 : sugar;
     return info;
 }
 

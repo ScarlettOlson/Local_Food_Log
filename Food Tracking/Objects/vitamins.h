@@ -1,7 +1,7 @@
 #ifndef vitamins
 #define vitamins
 
-typedef struct {} vitamin_info;
+typedef struct vitamin_info vitamin_info;
 
 vitamin_info *create_vitamin_info(int vitamin_d, int calcium, int iron, int potassium);
 vitamin_info *duplicate_vitamin_info(vitamin_info *info);
@@ -18,7 +18,7 @@ void set_calcium(vitamin_info *info, float val);
 void set_iron(vitamin_info *info, float val);
 void set_potassium(vitamin_info *info, float val);
 
-void destory_vitamin_info(vitamin_info *info);
+void destroy_vitamin_info(vitamin_info *info);
 
 #endif
 

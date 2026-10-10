@@ -1,16 +1,29 @@
-#include <stdlib.h>;
-#include "ingredients.h";
-#include "nutritional_info.h";
-#include "extra_nutritional_info.h";
-#include "vitamins.h";
+#include <stdlib.h>
+#include "ingredients.h"
+#include "nutritional_info.h"
+#include "extra_nutritional_info.h"
+#include "vitamins.h"
 #include "ingredients_list.h"
 
 #ifndef meals
 #define meals
 
+/**
+ * A structure for holding information about a user created meal.
+ * 
+ * All values are in grams unless otherwise noted
+ */
 typedef struct {
     char *name;
     char *description;
+    int  portions;
+
+    ingred_list *ingreds;
+    
+    int set_nutri_man;
+    nutri_info *nutri;
+    extra_nutri_info *e_nutri;
+    vitamin_info *vit;
 } meal;
 
 meal *create_meal(char *name, char *description, int portions, int set_nutrion_manually);

@@ -1,13 +1,24 @@
-#include "nutritional_info.h";
-#include "extra_nutritional_info.h";
-#include "vitamins.h";
+#include "nutritional_info.h"
+#include "extra_nutritional_info.h"
+#include "vitamins.h"
 
 #ifndef ingredients
 #define ingredients
 
+/**
+ * A structure for holding information about generic ingredients.
+ * 
+ * All values are in grams unless otherwise noted
+ */
 typedef struct {
     char *name;
     char *description;
+    float  portion_size;
+
+    // Nutrional Information
+    nutri_info *nutri;
+    extra_nutri_info *e_nutri;
+    vitamin_info *vit;
 } ingredient;
 
 ingredient  *create_ingredient(char *name, char *description, float portion_size);
