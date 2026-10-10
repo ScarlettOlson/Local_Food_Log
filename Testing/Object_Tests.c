@@ -394,12 +394,12 @@ void enutri_duplication_tests(float *sat_vals, float *trans_vals, float *chol_va
     // Test Duplicated Values are correct
     float sat, trans, chol, sod, fiber, sug;
     for(int i=0; i<num; i++) {
-        sat   = (sat_vals[i] < 0)     ? -1.0 : sat_vals[i];
-        trans = (trans_vals[i] < 0)   ? -1.0 : trans_vals[i];
-        chol      = (chol_vals[i] < 0) ? -1.0 : chol_vals[i];
-        sod    = (sod_vals[i] < 0)      ? -1.0 : sod_vals[i];
-        fiber     = (fiber_vals[i] < 0)       ? -1.0 : fiber_vals[i];
-        sug     = (sug_vals[i] < 0)       ? -1.0 : sug_vals[i];
+        sat   = (sat_vals[i] < 0)   ? -1.0 : sat_vals[i];
+        trans = (trans_vals[i] < 0) ? -1.0 : trans_vals[i];
+        chol  = (chol_vals[i] < 0)  ? -1.0 : chol_vals[i];
+        sod   = (sod_vals[i] < 0)   ? -1.0 : sod_vals[i];
+        fiber = (fiber_vals[i] < 0) ? -1.0 : fiber_vals[i];
+        sug   = (sug_vals[i] < 0)   ? -1.0 : sug_vals[i];
 
         objs2[i] = duplicate_extra_nutri_info(objs[i]);
         if(!objs2[i]) {
@@ -446,14 +446,14 @@ void enutri_duplication_tests(float *sat_vals, float *trans_vals, float *chol_va
     for(int i=0; i<num; i++) {
         sat   = get_sat_fat(objs[i]);
         trans = get_trans_fat(objs[i]);
-        chol      = get_cholesterol(objs[i]);
-        sod    = get_sodium(objs[i]);
-        fiber     = get_fiber(objs[i]);
-        sug     = get_sugar(objs[i]);
+        chol  = get_cholesterol(objs[i]);
+        sod   = get_sodium(objs[i]);
+        fiber = get_fiber(objs[i]);
+        sug   = get_sugar(objs[i]);
 
         objs3[i] = duplicate_extra_nutri_info(objs[i]);
         if(!objs[i]) {
-            printf("Unable to duplicated nutritional info object with the following values:\n");
+            printf("Unable to duplicated extra nutritional info object with the following values:\n");
             printf("sat_fat=%f, trans_fat=%f, chol=%f, ", sat, trans, chol);
             printf("sodium=%f, fiber=%f, sugar=%f\n\n", sod, fiber, sug);
             fail = 1;
@@ -500,12 +500,12 @@ void enutri_copy_test(float *sat_vals, float *trans_vals, float *chol_vals, floa
     // Test Object Copying
     float sat, trans, chol, sodium, fiber, sugar;
     for(int i=0; i<num; i++) {
-        sat    = (sat_vals[i] < 0) ? -1.0 : sat_vals[i];
+        sat    = (sat_vals[i] < 0)   ? -1.0 : sat_vals[i];
         trans  = (trans_vals[i] < 0) ? -1.0 : trans_vals[i];
-        chol   = (chol_vals[i] < 0) ? -1.0 : chol_vals[i];
-        sodium = (sod_vals[i] < 0) ? -1.0 : sod_vals[i];
+        chol   = (chol_vals[i] < 0)  ? -1.0 : chol_vals[i];
+        sodium = (sod_vals[i] < 0)   ? -1.0 : sod_vals[i];
         fiber  = (fiber_vals[i] < 0) ? -1.0 : fiber_vals[i];
-        sugar  =  (sug_vals[i] < 0) ? -1.0 : sug_vals[i];
+        sugar  = (sug_vals[i] < 0)   ? -1.0 : sug_vals[i];
 
         // If copy fails skip value checks
         if(!copy_extra_nutri_info(objs2[num-1-i], objs[num-1-i])) { 
@@ -516,17 +516,17 @@ void enutri_copy_test(float *sat_vals, float *trans_vals, float *chol_vals, floa
             continue;
         }
 
-        if(sat    != get_sat_fat(objs[i])) {
+        if(sat != get_sat_fat(objs[i])) {
             printf("Original sat_fat value incorrect after copying:\n");
             printf("Expected Value=%f\t Actual Value=%f\n\n", sat, get_sat_fat(objs[i]));
             fail = 1;
         }
-        if(trans  != get_trans_fat(objs[i])) {
+        if(trans != get_trans_fat(objs[i])) {
             printf("Original trans_fat value incorrect after copying:\n");
             printf("Expected Value=%f\t Actual Value=%f\n\n", trans, get_trans_fat(objs[i]));
             fail = 1;
         }
-        if(chol   != get_cholesterol(objs[i])) {
+        if(chol != get_cholesterol(objs[i])) {
             printf("Original cholesterol value incorrect after copying:\n");
             printf("Expected Value=%f\t Actual Value=%f\n\n", chol, get_cholesterol(objs[i]));
             fail = 1;
@@ -536,28 +536,28 @@ void enutri_copy_test(float *sat_vals, float *trans_vals, float *chol_vals, floa
             printf("Expected Value=%f\t Actual Value=%f\n\n", sodium, get_sodium(objs[i]));
             fail = 1;
         }
-        if(fiber  != get_fiber(objs[i])) {
+        if(fiber != get_fiber(objs[i])) {
             printf("Original fiber value incorrect after copying:\n");
             printf("Expected Value=%f\t Actual Value=%f\n\n", fiber, get_fiber(objs[i]));
             fail = 1;
         }
-        if(sugar  != get_sugar(objs[i])) {
+        if(sugar != get_sugar(objs[i])) {
             printf("Original sugar value incorrect after copying:\n");
             printf("Expected Value=%f\t Actual Value=%f\n\n", sugar, get_sugar(objs[i]));
             fail = 1;
         }
 
-        if(sat    != get_sat_fat(objs2[i])) {
+        if(sat != get_sat_fat(objs2[i])) {
             printf("Copied sat_fat value incorrect");
             printf("Expected Value=%f\t Actual Value=%f\n\n", sat, get_sat_fat(objs2[i]));
             fail = 1;
         }
-        if(trans  != get_trans_fat(objs2[i])) {
+        if(trans != get_trans_fat(objs2[i])) {
             printf("Copied trans_fat value incorrect");
             printf("Expected Value=%f\t Actual Value=%f\n\n", trans, get_trans_fat(objs2[i]));
             fail = 1;
         }
-        if(chol   != get_cholesterol(objs2[i])) {
+        if(chol != get_cholesterol(objs2[i])) {
             printf("Copied cholesterol value incorrect");
             printf("Expected Value=%f\t Actual Value=%f\n\n", chol, get_cholesterol(objs2[i]));
             fail = 1;
@@ -567,12 +567,12 @@ void enutri_copy_test(float *sat_vals, float *trans_vals, float *chol_vals, floa
             printf("Expected Value=%f\t Actual Value=%f\n\n", sodium, get_sodium(objs2[i]));
             fail = 1;
         }
-        if(fiber  != get_fiber(objs2[i])) {
+        if(fiber != get_fiber(objs2[i])) {
             printf("Copied fiber value incorrect");
             printf("Expected Value=%f\t Actual Value=%f\n\n", fiber, get_fiber(objs2[i]));
             fail = 1;
         }
-        if(sugar  != get_sugar(objs2[i])) {
+        if(sugar != get_sugar(objs2[i])) {
             printf("Copied sugar value incorrect");
             printf("Expected Value=%f\t Actual Value=%f\n\n", sugar, get_sugar(objs2[i]));
             fail = 1;
@@ -597,32 +597,32 @@ void enutri_copy_test(float *sat_vals, float *trans_vals, float *chol_vals, floa
         }
 
         if(sat != get_sat_fat(objs2[i])) {
-            printf(" Value incorrect when copying nutritional value to itself:\n");
+            printf(" Value incorrect when copying saturated fat value to itself:\n");
             printf("Expected Value=%f\t Actual Value=%f\n\n", sat, get_sat_fat(objs[i]));
             fail = 1;
         }
         if(trans != get_trans_fat(objs2[i])) {
-            printf(" Value incorrect when copying nutritional value to itself:\n");
+            printf(" Value incorrect when copying trans fat value to itself:\n");
             printf("Expected Value=%f\t Actual Value=%f\n\n", trans, get_trans_fat(objs[i]));
             fail = 1;
         }
         if(chol != get_cholesterol(objs2[i])) {
-            printf(" Value incorrect when copying nutritional value to itself:\n");
+            printf(" Value incorrect when copying cholesterol value to itself:\n");
             printf("Expected Value=%f\t Actual Value=%f\n\n", chol, get_chol(objs[i]));
             fail = 1;
         }
         if(sodium != get_sodium(objs2[i])) {
-            printf(" Value incorrect when copying nutritional value to itself:\n");
+            printf(" Value incorrect when copying sodium value to itself:\n");
             printf("Expected Value=%f\t Actual Value=%f\n\n", sodium, get_sodium(objs[i]));
             fail = 1;
         }
         if(fiber != get_fiber(objs2[i])) {
-            printf(" Value incorrect when copying nutritional value to itself:\n");
+            printf(" Value incorrect when copying fiber value to itself:\n");
             printf("Expected Value=%f\t Actual Value=%f\n\n", fiber, get_fiber(objs[i]));
             fail = 1;
         }
         if(sugar != get_sugar(objs2[i])) {
-            printf("Sugar Value incorrect when copying nutritional value to itself:\n");
+            printf("Sugar Value incorrect when copying sugar value to itself:\n");
             printf("Expected Value=%f\t Actual Value=%f\n\n", sugar, get_sugar(objs[i]));
             fail = 1;
         }
@@ -743,7 +743,298 @@ void enutri_tests() {
     }
     return NULL;
 }
+void vit_creation_tests(float *vitd_vals, float *calc_vals, float *iron_vals, float *pot_vals, 
+                        vitamin_info **objs, int num) {
+    int fail = 0;
+    
+    float vitd, calc, iron, pot;
+    for(int i=0; i<num; i++) {
+        vitd = (vitd_vals[i] < 0) ? -1.0 : vitd_vals[i];
+        calc = (calc_vals[i] < 0) ? -1.0 : calc_vals[i];
+        iron = (iron_vals[i] < 0) ? -1.0 : iron_vals[i];
+        pot  = (pot_vals[i]  < 0) ? -1.0 : pot_vals[i];
 
+        objs[i] = create_vitamin_info(vitd_vals[i], calc_vals[i], iron_vals[i], pot_vals[i]);
+        if(!objs[i]) { 
+            printf("Unable to create vitamin info object with the following values:\n");
+            printf("vitamin_d=%f, calcium=%f, ", vitd_vals[i], calc_vals[i]);
+            printf("iron=%f, potassium=%f\n\n", iron_vals[i], pot_vals[i]);
+            fail = 1;
+            continue;
+        }
+
+        if(vitd != get_(objs[i])) {
+            printf("Vitamin D value incorrect after creation:\n");
+            printf("Expected Value=%f\t Actual Value=%f\n\n", vitd, get_vitamin_d(objs[i]));
+            fail = 1;
+        }
+        if(calc != get_(objs[i])) {
+            printf("Calcium value incorrect after creation:\n");
+            printf("Expected Value=%f\t Actual Value=%f\n\n", calc, get_calcium(objs[i]));
+            fail = 1;
+        }
+        if(iron != get_(objs[i])) {
+            printf("Iron value incorrect after creation:\n");
+            printf("Expected Value=%f\t Actual Value=%f\n\n", iron, get_iron(objs[i]));
+            fail = 1;
+        }
+        if(pot != get_(objs[i])) {
+            printf("Potassium value incorrect after creation:\n");
+            printf("Expected Value=%f\t Actual Value=%f\n\n", pot, get_potassium(objs[i]));
+            fail = 1;
+        }
+    }
+    if(!fail) printf("All Vitamin Creation Tests Passed\n");
+}
+void vit_duplication_tests(float *vitd_vals, float *calc_vals, float *iron_vals, float *pot_vals, 
+                        vitamin_info **objs, vitamin_info **objs2, vitamin_info **objs3, int num) {
+    int fail = 0;
+
+    // Test Duplicated values are correct
+    float vitd, calc, iron, pot;
+    for(int i=0; i<num; i++) {
+        vitd = (vitd_vals[i] < 0) ? -1.0 : vitd_vals[i];
+        calc = (calc_vals[i] < 0) ? -1.0 : calc_vals[i];
+        iron = (iron_vals[i] < 0) ? -1.0 : iron_vals[i];
+        pot = (pot_vals[i] < 0) ? -1.0 : pot_vals[i];
+
+        objs2[i] = duplicate_vitamin_info(objs[i]);
+        if(!objs2[i]) {
+            printf("Unable to duplicate vitamin info object with the following values:\n");
+            printf("vitamin_d=%f, calcium=%f, ", vitd_vals[i], calc_vals[i]);
+            printf("iron=%f, potassium=%f\n\n", iron_vals[i], pot_vals[i]);
+            fail = 1;
+            continue;
+        };
+
+        if(vitd != get_vitamin_d(objs2[i])) {
+            printf("Vitamin D value incorrect in duplicated object");
+            printf("Expected Value=%f\t Actual Value=%f\n\n", vitd, get_vitamin_d(objs2[i]));
+            fail = 1;
+        }
+        if(calc != get_calc(objs2[i])) {
+            printf("Calcium value incorrect in duplicated object");
+            printf("Expected Value=%f\t Actual Value=%f\n\n", calc, get_calcium(objs2[i]));
+            fail = 1;
+        }
+        if(iron != get_iron(objs2[i])) {
+            printf("Iron value incorrect in duplicated object");
+            printf("Expected Value=%f\t Actual Value=%f\n\n", iron, get_iron(objs2[i]));
+            fail = 1;
+        }
+        if(pot != get_potassium(objs2[i])) {
+            printf("Potassium value incorrect in duplicated object");
+            printf("Expected Value=%f\t Actual Value=%f\n\n", pot, get_potassium(objs2[i]));
+            fail = 1;
+        }
+    }
+
+    // Test Original Valus are correct after duplication
+    for(int i=0; i<num; i++) {
+        vitd = get_vitamind(objs[i]);
+        calc = get_calcium(objs[i]);
+        iron = get_iron(objs[i]);
+        pot = get_potassium(objs[i]);
+
+        objs3[i] = duplicate_vitamin_info(objs);
+        if(!objs3[i]) {
+            printf("Unable to duplicated vitamininfo object with the following values:\n");
+            printf("vitamin_d=%f, calcium=%f, ", vitd_vals[i], calc_vals[i]);
+            printf("iron=%f, potassium=%f\n\n", iron_vals[i], pot_vals[i]);
+            fail = 1;
+            continue;
+        }
+
+        if(vitd != get_vitamin_d(objs[i])) {
+            printf("Original Vitamin D value incorrect after duplication:\n");
+            printf("Expected Value=%f, Actual Value=%f\n\n", vitd, get_vitamin_d(objs[i]));
+            fail = 1;
+        }
+        if(calc != get_calcium(objs[i])) {
+            printf("Original Calcium value incorrect after duplication:\n");
+            printf("Expected Value=%f, Actual Value=%f\n\n", calc, get_calium(objs[i]));
+            fail = 1;
+        }
+        if(iron != get_(objs[i])) {
+            printf("Original Iron value incorrect after duplication:\n");
+            printf("Expected Value=%f, Actual Value=%f\n\n", iron, get_iron(objs[i]));
+            fail = 1;
+        }
+        if(pot != get_potassium(objs[i])) {
+            printf("Original Potassium value incorrect after duplication:\n");
+            printf("Expected Value=%f, Actual Value=%f\n\n", pot, get_potassium(objs[i]));
+            fail = 1;
+        }
+    }
+
+    if(!fail) prinf("All Vitamin Info Duplication Tests Passed\n");
+}
+void vit_copy_tests(float *vitd_vals, float *calc_vals, float *iron_vals, float *pot_vals, 
+                        vitamin_info **objs, vitamin_info **objs2, int num) {
+    int fail = 0;
+    
+    // Test Object Copying
+    float vitd, calc, iron, pot;
+    for(int i=0; i<num; i++) {
+        vitd = (vitd_vals[i] < 0) ? -1.0 : vitd_vals[i];
+        calc = (calc_vals[i] < 0) ? -1.0 : calc_vals[i];
+        iron = (iron_vals[i] < 0) ? -1.0 : iron_vals[i];
+        pot  = (pot_vals[i]  < 0) ? -1.0 : pot_vals[i];
+
+        // If copy fails skip value checks
+        if(!copy_extra_nutri_info(objs2[num-1-i], objs[num-1-i])) { 
+            printf("Unable to copy vitamin info object with the following values:\n");
+            printf("vitamin_d=%f, calcium=%f, ", vitd_vals[i], calc_vals[i]);
+            printf("iron=%f, potassium=%f\n\n", iron_vals[i], pot_vals[i]);
+            fail = 1;
+            continue;
+        }
+
+        if(vitd != get_vitamin_d(objs[i])) {
+            printf("Original Vitamin D value incorrect after copying:\n");
+            printf("Expected Value=%f\t Actual Value=%f\n\n", vitd, get_vitamin_d(objs[i]));
+            fail = 1;
+        }
+        if(calc != get_calcium(objs[i])) {
+            printf("Original Calcium value incorrect after copying:\n");
+            printf("Expected Value=%f\t Actual Value=%f\n\n", calc, get_calcium(objs[i]));
+            fail = 1;
+        }
+        if(iron != get_iron(objs[i])) {
+            printf("Original Iron value incorrect after copying:\n");
+            printf("Expected Value=%f\t Actual Value=%f\n\n", iron, get_iron(objs[i]));
+            fail = 1;
+        }
+        if(pot != get_potassium(objs[i])) {
+            printf("Original Potassium value incorrect after copying:\n");
+            printf("Expected Value=%f\t Actual Value=%f\n\n", pot, get_potassium(objs[i]));
+            fail = 1;
+        }
+
+        if(vitd != get_vitamin_d(objs2[i])) {
+            printf("Copied Vitamin D value incorrect");
+            printf("Expected Value=%f\t Actual Value=%f\n\n", vit, get_vitamin_d(objs2[i]));
+            fail = 1;
+        }
+        if(calc != get_calcium(objs2[i])) {
+            printf("Copied Calcium value incorrect");
+            printf("Expected Value=%f\t Actual Value=%f\n\n", calc, get_calcium(objs2[i]));
+            fail = 1;
+        }
+        if(iron != get_iron(objs2[i])) {
+            printf("Copied Iron value incorrect");
+            printf("Expected Value=%f\t Actual Value=%f\n\n", iron, get_iron(objs2[i]));
+            fail = 1;
+        }
+        if(pot != get_potassium(objs2[i])) {
+            printf("Copied Potassium value incorrect");
+            printf("Expected Value=%f\t Actual Value=%f\n\n", pot, get_potassium(objs2[i]));
+            fail = 1;
+        }
+    }
+
+    // Test Copying Values to self
+    for(int i=0; i<num; i++) {
+        vitd = get_vitamin_d(objs2[i]);
+        calc = get_calcium(objs2[i]);
+        iron = get_iron(objs2[i]);
+        pot  = get_potassium(objs2[i]);
+
+        if(!copy_vitamin_info(objs2[i], objs2[i])) {
+            printf("Unable to copy vitamin info object to itself with the following values:\n");
+            printf("vitamin_d=%f, calcium=%f, ", vitd_vals[i], calc_vals[i]);
+            printf("iron=%f, potassium=%f\n\n", iron_vals[i], pot_vals[i]);
+            fail = 1; 
+            continue;
+        }
+
+        if(vitd != get_vitamin_d(objs2[i])) {
+            printf(" Value incorrect when copying vitamin d value to itself:\n");
+            printf("Expected Value=%f\t Actual Value=%f\n\n", vitd, get_vitamin_d(objs[i]));
+            fail = 1;
+        }
+        if(calc != get_calcium(objs2[i])) {
+            printf(" Value incorrect when copying calcium value to itself:\n");
+            printf("Expected Value=%f\t Actual Value=%f\n\n", calc, get_calcium(objs[i]));
+            fail = 1;
+        }
+        if(iron != get_iron(objs2[i])) {
+            printf(" Value incorrect when copying iron value to itself:\n");
+            printf("Expected Value=%f\t Actual Value=%f\n\n", iron, get_iron(objs[i]));
+            fail = 1;
+        }
+        if(pot != get_potassium(objs2[i])) {
+            printf(" Value incorrect when copying potassium value to itself:\n");
+            printf("Expected Value=%f\t Actual Value=%f\n\n", pot, get_potassium(objs[i]));
+            fail = 1;
+        }
+    }
+
+    if(!fail) printf("All Vitamin Info Copy Tests Passed\n");
+}
+void vit_setter_tests(float *vitd_vals, float *calc_vals, float *iron_vals, float *pot_vals, 
+                        vitamin_info **objs, int num) {
+    int fail = 0;
+
+    // Test Setters
+    float vitd, calc, iron, pot;
+    for(int i=0; i<num; i++) {
+        vitd = (vitd_vals[i] < 0) ? -1.0 : vitd_vals[i];
+        calc = (calc_vals[i] < 0) ? -1.0 : calc_vals[i];
+        iron = (iron_vals[i] < 0) ? -1.0 : iron_vals[i];
+        pot  = (pot_vals[i]  < 0) ? -1.0 : pot_vals[i];
+
+        set_vitamin_d(info_list[num-1-i], vitd);
+        set_calcium(info_list[num-1-i], calc);
+        set_iron(info_list[num-1-i], iron);
+        set_potassium(info_list[num-1-i], pot);
+
+        if(vitd != get_vitamin_d(info_list[i])) {
+            printf("Vitamin D value incorrect after setter used\n");
+            printf("Expected Value=%f\t Actual Value=%f\n\n", vitd, get_vitamin_d(objs[i]));
+            fail = 1;
+        }
+        if(calc != get_calcium(info_list[i])) {
+            printf("Calcium value incorrect after setter used\n");
+            printf("Expected Value=%f\t Actual Value=%f\n\n", calc, get_calium(objs[i]));
+            fail = 1;
+        }
+        if(iron != get_iron(info_list[i])) {
+            printf("Iron value incorrect after setter used\n");
+            printf("Expected Value=%f\t Actual Value=%f\n\n", iron, get_iron(objs[i]));
+            fail = 1;
+        }
+        if(pot != get_potassium(info_list[i])) {
+            printf("Potassium value incorrect after setter used\n");
+            printf("Expected Value=%f\t Actual Value=%f\n\n", pot, get_potassium(objs[i]));
+            fail = 1;
+        }
+    }
+
+    if(!fail) printf("All Vitamin Info Setter Tests Passed");
+}
+void vit_null_tests(vitamin_info *info) {
+    int fail = 0;
+    if(duplicate_vitamin_info(NULL)) fail = 1;
+
+    if(copy_vitamin_info(NULL, NULL)) fail = 1;
+    if(copy_vitamin_info(info, NULL)) fail = 1;
+    if(copy_vitamin_info(NULL, info)) fail = 1;
+
+    if(get_vitd(NULL)      != -1.0f) fail = 1;
+    if(get_calcium(NULL)   != -1.0f) fail = 1;
+    if(get_iron(NULL)      != -1.0f) fail = 1;
+    if(get_potassium(NULL) != -1.0f) fail = 1;
+
+    // No return values. Failure may or may not cause faults
+    set_vitamin_d(NULL, 0.0f);
+    set_calcium(NULL, 0.0f);
+    set_iron(NULL, 0.0f);
+    set_potassium(NULL, 0.0f);
+    destroy_vitamin_info(NULL);
+
+    if(!fail) printf("All Extra Nutritional Info NULL Tests Passes\n");
+}
 void *vitamin_tests(void *arg) {
     static int num = 10;
     float vitd_vals[] = { -15.6f, -13.7f, 12.0f,  01.0f, 0.80f, -0.6f,  0.00f, -1.000f, 13.50f, 6.600f };
