@@ -10,9 +10,7 @@ int read_user_csv(char *file) {
     if(fptr == NULL) {
         return 1;
     }
-    else {
-
-    }
+    // TODO: Read Data From File
 
     fclose(fptr);
     return 0;
